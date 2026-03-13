@@ -6,3 +6,4 @@ Sitemap: https://homesystembuilder.com/sitemap.xml
 Disallow: /api/
 Disallow: /scripts/
 Disallow: /admin/
+Disallow: /_next/
