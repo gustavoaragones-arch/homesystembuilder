@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://homesystembuilder.com/sitemap.xml
+
+Disallow: /api/
+Disallow: /scripts/
+Disallow: /admin/

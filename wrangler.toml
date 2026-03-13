@@ -1,0 +1,14 @@
+# Cloudflare Pages — HomeSystemBuilder
+# Deploy: npx wrangler pages deploy .vercel/output/static --project-name=homesystembuilder
+# Or connect repo in Cloudflare dashboard and set build: npm run build, output: .vercel/output/static
+
+name = "homesystembuilder"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# For Next.js on Pages: use Cloudflare's Next.js preset in the dashboard
+# (Pages > Create project > Connect to Git > Framework preset: Next.js)
+# Build command: npm run build (or npx @cloudflare/next-on-pages for full SSR)
+# Build output: .vercel/output/static (static) or .worker (with adapter)
+
+pages_build_output_dir = ".vercel/output/static"
