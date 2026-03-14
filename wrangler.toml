@@ -11,4 +11,4 @@ compatibility_flags = ["nodejs_compat"]
 # Build command: npm run build (or npx @cloudflare/next-on-pages for full SSR)
 # Build output: .next (static) or .worker (with adapter)
 
-pages_build_output_dir = "".next"
+pages_build_output_dir = ".next"
