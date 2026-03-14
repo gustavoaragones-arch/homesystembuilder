@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { RelatedPages } from "@/components/content/RelatedPages";
 import type { SeoPageEntry } from "@/lib/seo/types";
 
 interface RelatedPrintablesProps {
-  /** Same-category pages (excluding current) — up to 5 for internal link ring */
+  /** Same-category pages (excluding current) — exactly 5 for Layer 2 internal link ring */
   pages: SeoPageEntry[];
   /** e.g. "Cleaning", "Chore chart" */
   categoryTitle: string;
@@ -33,32 +34,13 @@ export function RelatedPrintables({
             </Link>
           </p>
         )}
-        <h2 className="mb-6 font-display text-2xl font-bold text-ink">
-          Related {categoryTitle} printables
-        </h2>
-        {pages.length > 0 ? (
-          <ul className="flex flex-wrap gap-3">
-            {pages.map((p) => (
-              <li key={p.slug}>
-                <Link
-                  href={`/${p.category}/${p.slug}`}
-                  className="card inline-block"
-                  style={{
-                    padding: "var(--space-3) var(--space-5)",
-                    textDecoration: "none",
-                    color: "var(--color-primary-dark)",
-                    fontSize: "var(--text-sm)",
-                    fontWeight: "var(--weight-medium)",
-                  }}
-                >
-                  {p.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        ) : (
+        <RelatedPages
+          pages={pages}
+          heading={`Related ${categoryTitle} printables`}
+        />
+        {pages.length === 0 && categorySlug && (
           <p className="font-body text-ink-muted">
-            <Link href={categorySlug ? `/${categorySlug}` : "/"} className="text-primary-dark underline">
+            <Link href={`/${categorySlug}`} className="text-primary-dark underline">
               Browse {categoryTitle} printables
             </Link>
           </p>

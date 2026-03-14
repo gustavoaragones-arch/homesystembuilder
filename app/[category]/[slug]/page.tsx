@@ -1,24 +1,36 @@
 import { notFound } from "next/navigation";
+import type { SeoPageEntry } from "@/lib/seo/types";
+import pagesData from "@/data/seo-pages/pages.json";
 import { SeoPageTemplate } from "@/components/SeoPageTemplate";
 import { RelatedPrintables } from "@/components/RelatedPrintables";
+import { SeoArticle } from "@/components/content/SeoArticle";
+import { FAQ } from "@/components/content/FAQ";
+import { Breadcrumb } from "@/components/content/Breadcrumb";
+import { generateContent } from "@/lib/content/generate-content";
+import { faqSchema } from "@/lib/seo/faq-schema";
+import { breadcrumbSchema } from "@/lib/seo/breadcrumb-schema";
 import {
   getPageByCategorySlug,
-  getAllPageParams,
   getRelatedPages,
   getCategoryTitle,
   getDefaultScheduleData,
   getDefaultDescription,
-  getDefaultArticleHtml,
-  buildFaqSchema,
   buildHowToSchema,
 } from "@/lib/seo";
+
+/** Only build pages from pages.json — no dynamic params (bad URLs) at runtime */
+export const dynamicParams = false;
 
 interface PageProps {
   params: Promise<{ category: string; slug: string }>;
 }
 
 export async function generateStaticParams() {
-  return getAllPageParams();
+  const pages = pagesData as SeoPageEntry[];
+  return pages.map((page) => ({
+    category: page.category,
+    slug: page.slug,
+  }));
 }
 
 export async function generateMetadata({ params }: PageProps) {
@@ -44,12 +56,13 @@ export default async function ProgrammaticSeoPage({ params }: PageProps) {
 
   const description = getDefaultDescription(page);
   const scheduleData = getDefaultScheduleData(page.printableType, page.title);
-  const articleHtml = getDefaultArticleHtml(page);
-  const related = getRelatedPages(category, slug, 6);
+  const content = generateContent(page.keyword, category);
+  const related = getRelatedPages(category, slug, 5);
   const categoryTitle = getCategoryTitle(category);
 
-  const faqSchema = buildFaqSchema(page);
-  const howToSchema = buildHowToSchema(page, description);
+  const faqJsonLd = faqSchema(content.faq);
+  const howToJsonLd = buildHowToSchema(page, description);
+  const breadcrumbJsonLd = breadcrumbSchema(category, categoryTitle, page.title, slug);
 
   const pinterestImages = [1, 2, 3].map((i) => ({
     src: `/pinterest/${slug}-${i}.jpg`,
@@ -57,16 +70,29 @@ export default async function ProgrammaticSeoPage({ params }: PageProps) {
     title: page.title,
   }));
 
+  const breadcrumbItems = [
+    { label: "Home", href: "/" },
+    { label: categoryTitle, href: `/${category}` },
+    { label: page.title },
+  ];
+
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <div className="mx-auto px-4 pt-6 md:px-8" style={{ maxWidth: "var(--max-width-layout)" }}>
+        <Breadcrumb items={breadcrumbItems} />
+      </div>
       <SeoPageTemplate
         title={page.title}
         description={description}
@@ -79,10 +105,10 @@ export default async function ProgrammaticSeoPage({ params }: PageProps) {
         ctaSecondaryLabel="Customize with generator"
         scheduleData={scheduleData}
         articleContent={
-          <div
-            className="seo-article space-y-6"
-            dangerouslySetInnerHTML={{ __html: articleHtml }}
-          />
+          <>
+            <SeoArticle content={content} />
+            <FAQ faq={content.faq} />
+          </>
         }
         pinterestImages={pinterestImages}
       />

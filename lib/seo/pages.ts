@@ -47,11 +47,11 @@ export function getPageByCategorySlug(
   return page ?? null;
 }
 
-/** Get related pages in the same category (excluding current slug), for internal linking */
+/** Get related pages in the same category (excluding current slug), for internal linking — 5 for Layer 2 ring */
 export function getRelatedPages(
   category: string,
   currentSlug: string,
-  limit = 6
+  limit = 5
 ): SeoPageEntry[] {
   const all = getAllPages();
   const page = getPageByCategorySlug(category, currentSlug);
