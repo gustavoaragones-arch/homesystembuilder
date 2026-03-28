@@ -5,15 +5,16 @@ import type { PrintableScheduleData } from "@/data/types";
 
 interface PrintablePreviewProps {
   scheduleData: PrintableScheduleData;
-  /** If provided, called when user clicks "Download free PDF" with current schedule data (e.g. to call /api/pdf). */
+  /** If provided, called when user clicks the PDF button with current schedule data (e.g. to call /api/pdf). */
   onDownloadPdf?: (data: PrintableScheduleData) => void | Promise<void>;
-  showDownloadButton?: boolean;
+  /** When false, hides PDF download; print remains (soft launch). */
+  showPdfDownloadButton?: boolean;
 }
 
 export function PrintablePreview({
   scheduleData,
   onDownloadPdf,
-  showDownloadButton = true,
+  showPdfDownloadButton = true,
 }: PrintablePreviewProps) {
   const printRef = useRef<HTMLDivElement>(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -134,25 +135,29 @@ export function PrintablePreview({
         )}
       </div>
 
-      {showDownloadButton && (
-        <div className="mt-6 flex flex-wrap gap-3 no-print">
-          <button
-            type="button"
-            onClick={handleDownload}
-            disabled={isGenerating}
-            className="btn-primary"
-          >
-            {isGenerating ? "Generating PDF…" : "Download free PDF"}
-          </button>
-          <button
-            type="button"
-            onClick={() => window.print()}
-            className="btn-secondary"
-          >
+      <div className="mt-6 flex flex-col gap-3 no-print">
+        {!showPdfDownloadButton && (
+          <p className="font-body text-sm text-ink-muted">
+            High-quality PDF export is coming soon. Use <strong>Print this page</strong> for a paper copy for
+            now.
+          </p>
+        )}
+        <div className="flex flex-wrap gap-3">
+          {showPdfDownloadButton && (
+            <button
+              type="button"
+              onClick={handleDownload}
+              disabled={isGenerating}
+              className="btn-primary"
+            >
+              {isGenerating ? "Generating PDF…" : "Save printable PDF"}
+            </button>
+          )}
+          <button type="button" onClick={() => window.print()} className="btn-secondary">
             Print this page
           </button>
         </div>
-      )}
+      </div>
     </div>
   );
 }

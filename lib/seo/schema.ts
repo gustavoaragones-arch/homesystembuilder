@@ -22,7 +22,7 @@ export function buildFaqSchema(entry: SeoPageEntry): object {
         name: `How do I get the free ${keyword}?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Use the generator on this page to customize your routine, then click the download button to get your free PDF. You can print it at home.",
+          text: "Use the generator on this page to customize your routine and preview your personalized planner on screen. You can print from your browser; PDF export is available when enabled on the site.",
         },
       },
       {
@@ -61,8 +61,8 @@ export function buildHowToSchema(
       },
       {
         "@type": "HowToStep",
-        name: "Download your printable",
-        text: "Click the download button to get your free PDF.",
+        name: "Preview your printable",
+        text: "Review the on-page planner preview and use your browser print option for a paper copy, or save a PDF when that option is available.",
       },
       {
         "@type": "HowToStep",

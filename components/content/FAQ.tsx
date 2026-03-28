@@ -11,11 +11,7 @@ export function FAQ({ faq }: FAQProps) {
   if (!faq?.length) return null;
 
   return (
-    <section
-      className="mt-10 border-t border-border pt-10"
-      style={{ marginTop: "var(--space-10)", paddingTop: "var(--space-10)" }}
-      aria-label="Frequently asked questions"
-    >
+    <div role="region" aria-label="Frequently asked questions">
       <h2
         className="mb-6 font-display text-xl font-semibold text-ink"
         style={{ marginBottom: "var(--space-6)" }}
@@ -40,6 +36,6 @@ export function FAQ({ faq }: FAQProps) {
           </div>
         ))}
       </div>
-    </section>
+    </div>
   );
 }

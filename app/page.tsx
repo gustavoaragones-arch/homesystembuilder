@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { RoutineGenerator } from "@/components/RoutineGenerator";
 import { PrintablePreview } from "@/components/PrintablePreview";
+import { FEATURES } from "@/config/features";
 
 export default function HomePage() {
   return (
@@ -53,23 +54,26 @@ export default function HomePage() {
               choreChart: [],
               kidsRoutine: [],
             }}
+            showPdfDownloadButton={FEATURES.PDF_DOWNLOAD}
           />
         </div>
       </section>
 
-      <section className="section-tinted border-y border-border px-4 py-16 md:px-8">
-        <div className="mx-auto max-w-layout text-center">
-          <h2 className="mb-4 font-display text-2xl font-bold text-ink">
-            Premium bundle
-          </h2>
-          <p className="mx-auto max-w-[520px] font-body text-ink-muted mb-8">
-            Get the full set of planners: morning & evening routines, meal planner, and seasonal cleaning checklist — all in one download.
-          </p>
-          <button type="button" className="btn-primary">
-            Get the premium bundle
-          </button>
-        </div>
-      </section>
+      {FEATURES.PREMIUM ? (
+        <section className="section-tinted border-y border-border px-4 py-16 md:px-8">
+          <div className="mx-auto max-w-layout text-center">
+            <h2 className="mb-4 font-display text-2xl font-bold text-ink">
+              Premium bundle
+            </h2>
+            <p className="mx-auto max-w-[520px] font-body text-ink-muted mb-8">
+              Get the full set of planners: morning & evening routines, meal planner, and seasonal cleaning checklist — all in one download.
+            </p>
+            <button type="button" className="btn-primary">
+              Get the premium bundle
+            </button>
+          </div>
+        </section>
+      ) : null}
     </>
   );
 }

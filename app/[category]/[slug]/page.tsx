@@ -101,15 +101,11 @@ export default async function ProgrammaticSeoPage({ params }: PageProps) {
         printableType={page.printableType}
         eyebrow={page.eyebrow}
         subtitle={page.subtitle}
-        ctaPrimaryLabel="Download Free Printable"
+        ctaPrimaryLabel="Preview Free Printable"
         ctaSecondaryLabel="Customize with generator"
         scheduleData={scheduleData}
-        articleContent={
-          <>
-            <SeoArticle content={content} />
-            <FAQ faq={content.faq} />
-          </>
-        }
+        introContent={<SeoArticle content={content} />}
+        faqContent={<FAQ faq={content.faq} />}
         pinterestImages={pinterestImages}
       />
       <RelatedPrintables

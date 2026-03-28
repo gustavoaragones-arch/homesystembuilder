@@ -1,9 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { PrintablePreview } from "@/components/PrintablePreview";
-import { RoutineGenerator } from "@/components/RoutineGenerator";
+import { RoutineGenerator } from "@/components/generator/RoutineGenerator";
+import { PremiumBundle } from "@/components/conversion/PremiumBundle";
 import type { PrintableScheduleData } from "@/data/types";
+import { FEATURES } from "@/config/features";
 
 export interface SeoPageTemplateProps {
   /** Main H1 and meta title */
@@ -28,8 +29,10 @@ export interface SeoPageTemplateProps {
   ctaSecondaryLabel?: string;
   /** Printable schedule data for preview and PDF */
   scheduleData: PrintableScheduleData;
-  /** SEO article content: intro + sections with headings, bullets, tips */
-  articleContent: React.ReactNode;
+  /** Intro article (above preview) */
+  introContent: React.ReactNode;
+  /** FAQ block (after generator + download funnel) */
+  faqContent: React.ReactNode;
   /** Optional: custom PDF download handler */
   onDownloadPdf?: (data: PrintableScheduleData) => void | Promise<void>;
   /** Pinterest-style images: 1000x1500 vertical, with title overlay */
@@ -49,10 +52,11 @@ export function SeoPageTemplate({
   category = "",
   eyebrow,
   subtitle,
-  ctaPrimaryLabel = "Download Free Printable",
+  ctaPrimaryLabel = "Preview Free Printable",
   ctaSecondaryLabel = "Customize with generator",
   scheduleData,
-  articleContent,
+  introContent,
+  faqContent,
   onDownloadPdf,
   pinterestImages = [],
 }: SeoPageTemplateProps) {
@@ -61,7 +65,7 @@ export function SeoPageTemplate({
 
   return (
     <>
-      {/* 1. Hero Section */}
+      {/* 1. Hero — CTAs to preview + generator (conversion path) */}
       <section
         className="hero px-4 py-16 text-center md:px-8"
         style={{
@@ -101,8 +105,11 @@ export function SeoPageTemplate({
         </div>
       </section>
 
-      {/* 2. SEO Article Block */}
-      <section className="px-4 py-12 md:px-8" style={{ paddingTop: "var(--space-12)", paddingBottom: "var(--space-12)" }}>
+      {/* 2. SEO intro (before printable) */}
+      <section
+        className="px-4 py-12 md:px-8"
+        style={{ paddingTop: "var(--space-12)", paddingBottom: "var(--space-12)" }}
+      >
         <article
           className="seo-article mx-auto font-body leading-relaxed"
           style={{
@@ -112,11 +119,11 @@ export function SeoPageTemplate({
             fontSize: "var(--text-md)",
           }}
         >
-          {articleContent}
+          {introContent}
         </article>
       </section>
 
-      {/* 3. Printable Preview Section + 4. Free PDF Download */}
+      {/* 3. Printable preview + free PDF from template data */}
       <section
         id="preview"
         className="border-y border-border bg-bg-surface px-4 py-16 md:px-8"
@@ -129,15 +136,17 @@ export function SeoPageTemplate({
           <PrintablePreview
             scheduleData={scheduleData}
             onDownloadPdf={onDownloadPdf}
-            showDownloadButton={true}
+            showPdfDownloadButton={FEATURES.PDF_DOWNLOAD}
           />
           <p className="mt-6 text-center font-body text-sm text-ink-muted" style={{ marginTop: "var(--space-6)" }}>
-            Use the button above to download your free printable.
+            {FEATURES.PDF_DOWNLOAD
+              ? "Preview the planner above, save a PDF when ready, or customize below — email unlock may apply for downloads."
+              : "Preview the planner on screen, print from your browser, or customize below. High-quality PDFs are coming soon — join early access in the section after your routine."}
           </p>
         </div>
       </section>
 
-      {/* 5. Generator Embed */}
+      {/* 4. Routine generator + download funnel (uses page printable until user generates) */}
       <section
         id="generator"
         className="border-y border-border bg-bg-surface px-4 py-16 md:px-8"
@@ -147,45 +156,25 @@ export function SeoPageTemplate({
           <h2 className="mb-8 font-display text-2xl font-bold text-ink">
             Customize your routine
           </h2>
-          <RoutineGenerator />
+          <RoutineGenerator pagePrintable={scheduleData} />
         </div>
       </section>
 
-      {/* 6. Premium Bundle CTA */}
+      {/* 5. FAQ */}
       <section
-        className="border-y border-border bg-bg-surface px-4 py-16 md:px-8"
+        id="faq"
+        className="px-4 py-16 md:px-8"
         style={{ paddingTop: "var(--space-16)", paddingBottom: "var(--space-16)" }}
       >
-        <div className="mx-auto max-w-content text-center">
-          <div className="card" style={{ padding: "var(--space-10) var(--space-8)" }}>
-            <h2 className="mb-4 font-display text-2xl font-bold text-ink">
-              Unlock the Complete Home System
-            </h2>
-            <p className="mb-6 font-body text-ink-muted" style={{ marginBottom: "var(--space-6)" }}>
-              Includes:
-            </p>
-            <ul
-              className="mx-auto mb-8 list-inside list-disc font-body text-ink-muted text-left max-w-md"
-              style={{ marginBottom: "var(--space-8)" }}
-            >
-              <li>Cleaning planners</li>
-              <li>Chore charts</li>
-              <li>Kids routines</li>
-              <li>Home maintenance logs</li>
-            </ul>
-            <div className="flex flex-wrap items-center justify-center gap-3">
-              <Link href="/" className="btn-primary">
-                Get the bundle
-              </Link>
-              <Link href="/planners" className="btn-secondary">
-                Browse planners
-              </Link>
-            </div>
-          </div>
+        <div className="mx-auto" style={{ maxWidth: "var(--max-width-content)" }}>
+          {faqContent}
         </div>
       </section>
 
-      {/* 7. Pinterest Images Section */}
+      {/* 6. Premium bundle (gated) */}
+      {FEATURES.PREMIUM ? <PremiumBundle /> : null}
+
+      {/* 7. Pinterest */}
       {pinterestImages.length > 0 && (
         <section
           className="px-4 py-16 md:px-8"
