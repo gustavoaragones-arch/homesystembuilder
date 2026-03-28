@@ -56,11 +56,17 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Cloudflare Pages deployment
 
-1. **Dashboard:** Connect your repo. Choose **Framework preset: Next.js**.
-2. **Build:** `npm run build`
-3. **Output:** Set to `.next` (or `.vercel/output/static` if using static export).
+This project builds a **static export** (`next.config.js` → `output: "export"`). The deployable site is the **`out/`** directory (includes **`out/index.html`** for `/`).
 
-For full SSR on Cloudflare, use [@cloudflare/next-on-pages](https://github.com/cloudflare/next-on-pages) or [OpenNext for Cloudflare](https://opennext.js.org/cloudflare) and set the build output accordingly. `wrangler.toml` is included for reference.
+1. **Dashboard:** Connect your repo.
+2. **Build command:** `npm run build`
+3. **Build output directory:** **`out`** (not `.next` — that folder is not a static site root and will 404 at `/`).
+
+If the dashboard **Framework preset** forces the wrong output, switch to **None** or override the output directory to **`out`**.
+
+`app/page.tsx` is the App Router home route (same role as `app/page.jsx`).
+
+For **SSR + API routes** on Cloudflare, use [@cloudflare/next-on-pages](https://github.com/cloudflare/next-on-pages) or [OpenNext for Cloudflare](https://opennext.js.org/cloudflare) instead of `output: "export"`. `wrangler.toml` lists `pages_build_output_dir = "out"` for this static setup.
 
 ## Styling
 

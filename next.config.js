@@ -1,10 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    unoptimized: true, // for Cloudflare Pages static export if needed
+    unoptimized: true, // required for static export
   },
-  // Cloudflare Pages: use static export or @cloudflare/next-on-pages for full SSR
-  // output: 'export', // uncomment for static-only deployment
+  // Cloudflare Pages: deploy the `out/` directory (not `.next`).
+  // See wrangler.toml and README deployment notes.
+  output: "export",
 };
 
 module.exports = nextConfig;

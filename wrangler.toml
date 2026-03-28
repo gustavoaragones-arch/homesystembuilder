@@ -1,14 +1,15 @@
 # Cloudflare Pages — HomeSystemBuilder
-# Deploy: npx wrangler pages deploy .next --project-name=homesystembuilder
-# Or connect repo in Cloudflare dashboard and set build: npm run build, output: .next
+#
+# This app uses Next.js `output: "export"` → static files in `out/` (includes `index.html` for `/`).
+# Do NOT set the output directory to `.next` — that folder is not a deployable static root.
+#
+# Dashboard: Build command = npm run build
+#             Build output directory = out
+#
+# CLI: npx wrangler pages deploy out --project-name=homesystembuilder
 
 name = "homesystembuilder"
 compatibility_date = "2024-01-01"
 compatibility_flags = ["nodejs_compat"]
 
-# For Next.js on Pages: use Cloudflare's Next.js preset in the dashboard
-# (Pages > Create project > Connect to Git > Framework preset: Next.js)
-# Build command: npm run build (or npx @cloudflare/next-on-pages for full SSR)
-# Build output: .next (static) or .worker (with adapter)
-
-pages_build_output_dir = ".next"
+pages_build_output_dir = "out"

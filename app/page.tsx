@@ -1,3 +1,4 @@
+/** App Router root route — equivalent to `app/page.jsx` (home `/`). */
 import Link from "next/link";
 import { RoutineGenerator } from "@/components/RoutineGenerator";
 import { PrintablePreview } from "@/components/PrintablePreview";
